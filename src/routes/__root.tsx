@@ -4,8 +4,6 @@ import {
   createRootRouteWithContext,
   useRouter,
   useRouterState,
-  HeadContent,
-  Scripts,
   Link,
 } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -22,8 +20,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
-
-import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
   return (
@@ -83,55 +79,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/18d16fbd-3bda-4faa-a649-b553b8b1cdd6/id-preview-32b87fe5--ce1743b5-37dc-4a29-8b45-795afff330c4.lovable.app-1778825636383.png" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@500;600&display=swap",
-      },
-    ],
   }),
-  shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
 });
-
-function RootShell({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en" className="dark">
-      <head>
-        <HeadContent />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function () {
-                try {
-                  var path = window.location.pathname;
-                  var isPublic = path.indexOf('/auth') === 0 || path.indexOf('/admin') === 0;
-                  if (isPublic) return;
-
-                  var session = window.localStorage.getItem('kongsi_store_session');
-                  if (!session) {
-                    window.location.replace('/auth?redirect=' + encodeURIComponent(path + window.location.search));
-                  }
-                } catch (error) {
-                  window.location.replace('/auth');
-                }
-              })();
-            `,
-          }}
-        />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  );
-}
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
